@@ -21,6 +21,7 @@ public class ObtenerDatos extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private HashMap<String, Integer> datosMapa = new HashMap();
 	private HashMap<String, Integer> datosHora = new HashMap();
+	private HashMap<String, Integer> datosProgramas = new HashMap();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -35,6 +36,9 @@ public class ObtenerDatos extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String hashtag1 = request.getParameter("primerHashtag");
+		if(hashtag1 == null) {
+			hashtag1 = "#granhotel";
+		}
 		ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
           .setOAuthConsumerKey("oYPepKXb9Wg4uJFPfbapcw")
@@ -86,7 +90,7 @@ public class ObtenerDatos extends HttpServlet {
 		        if(query == null) break;
 		        if(finished) break;
 	        }
-	        
+	        datosProgramas.put(hashtag1, count);
 	        System.out.println("Tweets totales: " + count);
         } catch(Exception e) {
         	System.out.println(e.toString());
@@ -161,38 +165,57 @@ public class ObtenerDatos extends HttpServlet {
       "  chart1.draw(data, options);" + "\n" +
       "}" + "\n" +
     "</script>");
+      
+      out.println("<script type=\"text/javascript\">\n" +
+    "google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});" + "\n" +
+    "google.setOnLoadCallback(drawVisualization);" + "\n" +
+    "function drawVisualization() {" + "\n" +
+  "var data = google.visualization.arrayToDataTable([" + "\n" +
+  "  ['Graphic', 'Tweets'],");
+
+     iterator = datosProgramas.keySet().iterator();  
+      
+      while (iterator.hasNext()) {  
+         String key = iterator.next().toString();  
+         String value = datosProgramas.get(key).toString();  
+         
+     		out.println("['" + key + "', " + value + "],");
+      }
+  
+  	out.println("]);" + "\n" +
+
+  "new google.visualization.ColumnChart(document.getElementById('chart_div2'))." + "\n" +
+  "    draw(data" + "\n" +
+  "    );" + "\n" +
+  "}" + "</script>");
+
 
 
         out.println("</head>");
         out.println("<body>");
         out.println("<h1>Visualizando datos sobre: " + hashtag1 + "</h1>");
         out.println("<div style=\"display:block; float: right;\">" +
-        			" <a href=\"/lisw2013_helloworld\">Nueva Búsqueda</a></div>");
+        			"<form  action=\"ObtenerDatos\" method=\"get\">" +
+        			"<input type=\"text\" name=\"primerHashtag\">" +
+        			"<input type=\"submit\" value=\"Evaluar\"></div>");
         out.println("<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 100%;\">");
         out.println("<tbody>");
         out.println("<tr>");
         out.println("<td>");
         out.println("<h3>Evolución Horaria</h3>");
         out.println("<div id=\"chart_div1\" style=\"width: 500px;\"></div>");
-        out.println("<br />");
-        out.println("<br />");
-        out.println("<br />");
         out.println("</td>");
         out.println("<td rowspan=\"2\">");
         out.println("<h3>Mapa de Actividad</h3>");
-        out.println("<div id=\"chart_div\" style=\"width: 600px;\"></div>");
+        out.println("<div id=\"chart_div\" style=\"width: 700px;\"></div>");
+        out.println("<br />");
+        out.println("<br />");
         out.println("</td>");
         out.println("</tr>");
         out.println("<tr>");
         out.println("<td>");
         out.println("<h3>Top 5 Programas</h3>");
-        out.println("<br />");
-        out.println("<br />");
-        out.println("<br />");
-        out.println("<br />");
-        out.println("<br />");
-        out.println("<br />");
-        out.println("<br />");
+        out.println("<div id=\"chart_div2\" style=\"width: 500px;\"></div>");
         out.println("</td>");
         out.println("</tr>");
         out.println("</tbody>");
