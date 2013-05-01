@@ -52,11 +52,13 @@ public class ObtenerDatos extends HttpServlet {
         query.setCount(100); // Cogemos los máximos posibles
 
   	  	// Cogemos tweets de ayer y hoy
-        int DAYSTOGET = 2;
-        SimpleDateFormat getDay = new SimpleDateFormat ("dd");
-  	  	SimpleDateFormat getMonthYear = new SimpleDateFormat ("yyyy-MM-");
-  	  	int theDay = Integer.parseInt(getDay.format(new Date().getTime()));
-        query.setSince(getMonthYear.format(new Date().getTime()) + (theDay + 1 - DAYSTOGET));
+        int DAYSTOGET = 1;
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 0 - DAYSTOGET);
+        System.out.println(dateFormat.format(cal.getTime()));
+        query.setSince(dateFormat.format(cal.getTime()));
         
         int count = 0;
         String responseText = "";
@@ -71,6 +73,7 @@ public class ObtenerDatos extends HttpServlet {
 	        for (int j = 0; j < 10; j++) {
 		        QueryResult result = twitter.search(query);
 		        List<Status> tweets = result.getTweets();
+		        System.out.println(tweets.size());
 		        for (int i = 0; i < tweets.size(); i++) {
 		        	  Status t = tweets.get(i);
 		        	  count++;
