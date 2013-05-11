@@ -8,27 +8,21 @@
 		<link type="text/css" rel="stylesheet" href="css/stylesheet.css">
 		
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+		<script type="text/javascript" src="js/options.js"></script>
 		<script type="text/javascript">
 			google.load("visualization", "1", {"packages": ["geochart"]});
 			google.setOnLoadCallback(drawRegionsMap);
-			
-			function drawRegionsMap() {
-				var data = google.visualization.arrayToDataTable([
-						["Provincia", "Tweets"],
-						<c:forEach var="tweet" items="${datosMapa}">
-					    	["${tweet.key}", ${tweet.value}],
-						</c:forEach>
+			function drawRegionsMap(){
+				Datas.map = google.visualization.arrayToDataTable([
+					["Provincia", "Tweets"],
+					<c:forEach var="tweet" items="${datosMapa}">
+						["${tweet.key}", ${tweet.value}],
+					</c:forEach>
 				]);
-				
-				var options = {
-						displayMode: "regions",
-						region: "ES",
-						resolution: "provinces",
-						colorAxis: {colors: ["#FFDDDD", "red"]}
-				};
-				
-				var chart = new google.visualization.GeoChart(document.getElementById("chart_div"));
-				chart.draw(data, options);
+					
+				Charts.map = new google.visualization.GeoChart(document.getElementById("chart_div"));
+				Charts.map.draw(Datas.map, Options.map);
 			}
 		</script>
 
@@ -37,7 +31,7 @@
 			google.setOnLoadCallback(drawChart);
 			
 			function drawChart() {
-				var data = google.visualization.arrayToDataTable([
+				Datas.hour = google.visualization.arrayToDataTable([
 						["Hora", "Tweets"],
 						<c:forEach var="i" begin="0" end="24" step="1">
 							<c:set var="key" value="" />
@@ -60,13 +54,8 @@
 						</c:forEach>
 				]);
 				
-				var options = {
-						vAxis: {title: "Tweets",  titleTextStyle: {color: "black"}},
-						hAxis: {title: "Hora",  titleTextStyle: {color: "black"}},
-				};
-				
-				var chart1 = new google.visualization.AreaChart(document.getElementById("chart_div1"));
-				chart1.draw(data, options);
+				Charts.hour = new google.visualization.AreaChart(document.getElementById("chart_div1"));
+				Charts.hour.draw(Datas.hour, Options.hour);
 			}
 		</script>
 		
@@ -75,15 +64,21 @@
 			google.setOnLoadCallback(drawVisualization);
 			
 			function drawVisualization() {
-				var data = google.visualization.arrayToDataTable([
+				Datas.programs = google.visualization.arrayToDataTable([
 						['Graphic', 'Tweets'],
 						<c:forEach var="tweet" items="${datosProgramas}">
 				    		["${tweet.key}", ${tweet.value}],
 						</c:forEach>
 				]);
 				
-				new google.visualization.ColumnChart(document.getElementById('chart_div2')).draw(data);
+				Charts.programs = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
+				Charts.programs.draw(Datas.programs);
 			}
+		</script>
+		
+		<script type="text/javascript" src="js/streaming.js"></script>
+		<script type="text/javascript">
+			Streaming.initialize("${hashtag}");
 		</script>
 	</head>
 	

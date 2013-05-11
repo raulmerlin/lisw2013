@@ -6,5 +6,16 @@
 
  <display-name>Audimetro Social</display-name>
   
+  <servlet>
+  	<servlet-name>websocket</servlet-name>
+  	<servlet-class>lisw.audimetrosocial.servlet.StreamingServlet</servlet-class>
+  	
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>websocket</servlet-name>
+  	<url-pattern>/ws/streaming</url-pattern>
+  </servlet-mapping>
   
 </web-app>

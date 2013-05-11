@@ -7,24 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import lisw.audimetrosocial.business.TwitterQuery;
-
-import twitter4j.Query;
-import twitter4j.QueryResult;
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterFactory;
-import twitter4j.User;
-import twitter4j.conf.ConfigurationBuilder;
 
 /**
  * Servlet implementation class ObtenerDatos
@@ -59,6 +45,7 @@ public class ObtenerDatos extends HttpServlet {
 		datosProgramas = twitterQuery.getDatosProgramas();
 		int count = twitterQuery.getCount();
 		
+		request.setAttribute("hashtag", hashtag1);
 		request.setAttribute("responseText", responseText);
 		request.setAttribute("count", count);
 		request.setAttribute("datosMapa", datosMapa);
