@@ -1,16 +1,27 @@
 package lisw.audimetrosocial;
 
-import java.io.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import twitter4j.*;
+import twitter4j.Query;
+import twitter4j.QueryResult;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 
 /**
@@ -19,9 +30,9 @@ import twitter4j.conf.ConfigurationBuilder;
 @WebServlet("/ObtenerDatos")
 public class ObtenerDatos extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private HashMap<String, Integer> datosMapa = new HashMap();
-	private HashMap<String, Integer> datosHora = new HashMap();
-	private HashMap<String, Integer> datosProgramas = new HashMap();
+	private Map<String, Integer> datosMapa = new HashMap<String, Integer>();
+	private Map<String, Integer> datosHora = new HashMap<String, Integer>();
+	private Map<String, Integer> datosProgramas = new HashMap<String, Integer>();
        
     /**
      * @see HttpServlet#HttpServlet()
