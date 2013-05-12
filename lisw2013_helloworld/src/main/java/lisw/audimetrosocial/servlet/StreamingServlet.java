@@ -32,10 +32,17 @@ public class StreamingServlet extends WebSocketServlet {
 
 	private final class StreamingRequestInbound extends MessageInbound{
 		
+		TwitterStreaming query;
+		
 		private StreamingRequestInbound(String hashtag) throws IOException{
-			TwitterStreaming query = new TwitterStreaming(this, hashtag);
+			query = new TwitterStreaming(this, hashtag);
 			Thread streaming = new Thread(query);
 			streaming.start();
+		}
+		
+		@Override
+		protected void onClose(int status){
+			query.stopStream();
 		}
 		
 		@Override

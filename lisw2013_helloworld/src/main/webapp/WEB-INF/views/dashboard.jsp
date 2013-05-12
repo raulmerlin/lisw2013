@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<title>Visualizando datos sobre: ${hashtag}</title>
 		<meta http-equiv="content-type" content="text/html;charset=ISO-8859-1" />
 		<link type="text/css" rel="stylesheet" href="css/stylesheet.css">
 		
@@ -29,18 +29,19 @@
 		<script type="text/javascript">
 			google.load("visualization", "1", {packages:["corechart"]});
 			google.setOnLoadCallback(drawChart);
-			
+
+			<c:set var="hour" value="${startingHour}" />
 			function drawChart() {
 				Datas.hour = google.visualization.arrayToDataTable([
 						["Hora", "Tweets"],
-						<c:forEach var="i" begin="0" end="24" step="1">
+						<c:forEach var="i" begin="0" end="23" step="1">
 							<c:set var="key" value="" />
 							<c:choose>
-								<c:when test="${ i < 10 }">
-									<c:set var="key" value="0${i}" />
+								<c:when test="${ hour < 10 }">
+									<c:set var="key" value="0${hour}" />
 								</c:when>
 								<c:otherwise>
-									<c:set var="key" value="${i}" />
+									<c:set var="key" value="${hour}" />
 								</c:otherwise>
 							</c:choose>
 							
@@ -51,6 +52,7 @@
 								</c:if>
 							</c:forEach>
 							["${key}", ${tweets}],
+							<c:set var="hour" value="${ (hour + 1) % 24 }" />
 						</c:forEach>
 				]);
 				
@@ -83,7 +85,7 @@
 	</head>
 	
 	<body>
-		<h1>Visualizando datos sobre: #granhotel</h1>
+		<h1>Visualizando datos sobre: ${hashtag}</h1>
 		
 		<div class="right">
 			<form  action="ObtenerDatos" method="get">
@@ -128,6 +130,7 @@
 		<div id="tweets">
 			${responseText}
 			Tweets totales analizados: ${count}
+			<br />
 		</div>
 		
 	</body>	

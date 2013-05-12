@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +47,11 @@ public class ObtenerDatos extends HttpServlet {
 		datosProgramas = twitterQuery.getDatosProgramas();
 		int count = twitterQuery.getCount();
 		
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("HH");
+		String currentHour = dateFormatter.format(new Date());
+		int startingHour = Integer.parseInt(currentHour) + 1;
+		
+		request.setAttribute("startingHour", startingHour);
 		request.setAttribute("hashtag", hashtag1);
 		request.setAttribute("responseText", responseText);
 		request.setAttribute("count", count);

@@ -14,11 +14,13 @@ public class TwitterStreaming implements Runnable{
 	private StreamInbound connection;
 	private String hashtag;
 	private ConfigurationBuilder cb;
+	private volatile boolean running;
 	
 	public TwitterStreaming(StreamInbound connection, String hashtag) throws IOException{
 		this();
 		this.connection = connection;
 		this.hashtag = hashtag;
+		running = true;
 	}
 	
 	public TwitterStreaming() throws IOException{
@@ -42,7 +44,14 @@ public class TwitterStreaming implements Runnable{
 		
 		// Get the stream
 		stream.filter(new FilterQuery(0, null, hashtagArray));
-		
+		while (running){
+			
+		}
+		stream.cleanUp();
+	}
+	
+	public void stopStream(){
+		running = false;
 	}
 
 }
