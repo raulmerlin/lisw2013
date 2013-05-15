@@ -71,13 +71,18 @@ var Streaming = {
 		
 		initialize: function(hashtag){
 			Streaming.hashtag = hashtag;
+			var url = window.location.href;
+			url = url.substring(url.indexOf("/", 0) + 2);
+			url = url.substring(url.indexOf("/", 0) + 1);
+			url = url.substring(0, url.indexOf("/", 0));
+
 			if (window.location.protocol == 'http:'){
-				Streaming.connect('ws://' + window.location.host 
-						+ '/audimetro/ws/streaming?hashtag=' 
+				Streaming.connect('ws://' + window.location.host + "/" + url
+						+ '/ws/streaming?hashtag=' 
 						+ encodeURIComponent(hashtag));
 			} else {
-				Streaming.connect('wss://' + window.location.host 
-						+ '/audimetro/ws/streaming?hashtag=' + encodeURIComponent(hashtag));
+				Streaming.connect('wss://' + window.location.host + "/" + url
+						+ '/ws/streaming?hashtag=' + encodeURIComponent(hashtag));
 			}
 		}
 };
