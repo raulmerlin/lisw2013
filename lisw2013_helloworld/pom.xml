@@ -10,7 +10,7 @@
     <url>http://maven.apache.org</url>
     
     <properties>
-    	<source.version>1.7</source.version>
+    	<source.version>1.6</source.version>
     	<tomcat.version>7.0.39</tomcat.version>
     </properties>
 

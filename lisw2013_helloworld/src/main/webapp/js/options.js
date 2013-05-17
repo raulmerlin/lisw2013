@@ -1,6 +1,7 @@
 var Datas = {
 		map: null,
 		hour: null,
+		minutes: null,
 		programs: null
 };
 

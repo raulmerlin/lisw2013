@@ -41,18 +41,35 @@ var Streaming = {
 				}
 				
 				var hourExists = false;
+				var hour = data.date.substring(0, data.date.indexOf(":"));
 				for (var y = 0, maxrows = Datas.hour.getNumberOfRows(); y < maxrows; y++){
-					if (Datas.hour.getValue(y, 0) == data.date){
+					if (Datas.hour.getValue(y, 0) == hour){
 						hourExists = true;
 						Datas.hour.setValue(y, 1, Datas.hour.getValue(y, 1) + 1);
 					}
 				}
 				
 				if (!hourExists){
-					Datas.hour.addRow([data.date, 1]);
+					Datas.hour.addRow([hour, 1]);
 				}
-				//Charts.hour = new google.visualization.AreaChart(document.getElementById("chart_div1"));
-				Charts.hour.draw(Datas.hour, Options.hour);
+				
+				var minuteExists = false;
+				for (var y = 0, maxrows = Datas.minutes.getNumberOfRows(); y < maxrows; y++){
+					if (Datas.minutes.getValue(y, 0) == data.date){
+						minuteExists = true;
+						Datas.minutes.setValue(y, 1, Datas.minutes.getValue(y, 1) + 1);
+					}
+				}
+				
+				if (!minuteExists){
+					Datas.minutes.addRow([data.date, 1]);
+				}
+				if ($("#switchScale").text() === "Ver los últimos minutos"){
+					Charts.hour.draw(Datas.hour, Options.hour);
+				} else {
+					Charts.hour.draw(Datas.minutes, Options.hour);
+				}
+				
 				
 				for (var y = 0, maxrows = Datas.programs.getNumberOfRows(); y < maxrows; y++){
 					console.log(Datas.programs.getValue(y, 0) + ": " 
@@ -86,4 +103,17 @@ var Streaming = {
 			}
 		}
 };
+
+$(document).ready(function(){
+	$("#switchScale").click(function(){
+		if ($(this).text() === "Ver los últimos minutos"){
+			$(this).text("Ver el último día");
+			Charts.hour.draw(Datas.minutes);
+			
+		} else{
+			$(this).text("Ver los últimos minutos");
+			Charts.hour.draw(Datas.hour);
+		}
+	});
+});
 

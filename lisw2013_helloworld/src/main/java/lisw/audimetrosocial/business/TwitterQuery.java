@@ -24,6 +24,7 @@ public class TwitterQuery {
 	private Map<String, Integer> datosMapa = new HashMap<String, Integer>();
 	private Map<String, Integer> datosHora = new HashMap<String, Integer>();
 	private Map<String, Integer> datosProgramas = new HashMap<String, Integer>();
+	private Map<String, Integer> quinzeMinutos = new HashMap<String, Integer>();
 	private int count;
 
 	public TwitterQuery() throws IOException{
@@ -45,6 +46,9 @@ public class TwitterQuery {
 
   	  	// Cogemos tweets de ayer y hoy
         int DAYSTOGET = 1;
+        
+        // Current date
+        Date now = new Date();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
@@ -53,6 +57,12 @@ public class TwitterQuery {
         query.setSince(dateFormat.format(cal.getTime()));
         
         String responseText = "";
+        Date createdAt;
+        SimpleDateFormat hora = new SimpleDateFormat("HH");
+        SimpleDateFormat minutos = new SimpleDateFormat("HH:mm");
+        String date;
+        
+        
         try {
             count = 0;
 
@@ -67,10 +77,15 @@ public class TwitterQuery {
 		        	  count++;
 
 		        	  String msg = t.getText();
-		        	  Date d = t.getCreatedAt();
-		        	  SimpleDateFormat ft = new SimpleDateFormat ("HH");
-		        	  String date = ft.format(d);
+		        	  createdAt = t.getCreatedAt();
+		        	  date = hora.format(createdAt);
 		        	  addHora(date);
+		        	  
+		        	  if (((now.getTime() - createdAt.getTime()) * 1000 * 60) < 15){
+		        		  date = minutos.format(createdAt);
+		        		  addMinutos(date);
+		        	  }
+		        	  
 		        	  User user = t.getUser();
 		        	  if(user.getLocation().length() > 0) addLocalCode(user.getLocation());
 		        	  	  responseText += date + " - " + msg + "<br />\n";
@@ -96,6 +111,15 @@ public class TwitterQuery {
 			datosHora.put(hora, (habia + 1));
 		} else {
 			datosHora.put(hora, 1);
+		}
+	}
+	
+	private void addMinutos(String minuto){
+		if (quinzeMinutos.containsKey(minuto)){
+			int habia = (Integer)quinzeMinutos.get(minuto);
+			quinzeMinutos.put(minuto, (habia + 1));
+		} else{
+			quinzeMinutos.put(minuto, 1);
 		}
 	}
 	
@@ -125,5 +149,13 @@ public class TwitterQuery {
 	
 	public int getCount(){
 		return count;
+	}
+
+	public Map<String, Integer> getQuinzeMinutos() {
+		return quinzeMinutos;
+	}
+
+	public void setQuinzeMinutos(Map<String, Integer> quinzeMinutos) {
+		this.quinzeMinutos = quinzeMinutos;
 	}
 }

@@ -56,6 +56,31 @@
 						</c:forEach>
 				]);
 				
+				<c:set var="hour" value="${startingHourForMinuteView}" />
+				<c:set var="minute" value="${startingMinute}" />
+				Datas.minutes = google.visualization.arrayToDataTable([
+						["Hora", "Tweets"],
+						<c:forEach var="i" begin="0" end="14" step="1">
+							<c:set var="key" value="${hour}:${minute}" />
+							<c:set var="tweets" value="0" />
+							
+							<c:forEach var="tweet" items="${quinzeMinutos}">
+								<c:if test="${tweet.key eq key}">
+									<c:set var="tweets" value="${tweet.value}" />
+								</c:if>
+							</c:forEach>
+							
+							["${key}", ${tweets}],
+
+							<c:set var="minute" value="${ minute + 1 }" />
+							<c:if test="${ minute > 60 }">
+								<c:set var="minute" value="${ minute % 24 }" />
+								<c:set var="hour" value="${ hour + 1}" />
+							</c:if>
+						</c:forEach>
+				]);
+				
+				
 				Charts.hour = new google.visualization.AreaChart(document.getElementById("chart_div1"));
 				Charts.hour.draw(Datas.hour, Options.hour);
 			}
@@ -99,6 +124,9 @@
 					<td>
 						<h3>Evolución Horaria</h3>
 						<div id="chart_div1" style="width: 500px;"></div>
+						<div>
+							<button id="switchScale">Ver los últimos minutos</button>
+						</div>
 					</td>
 					
 					<td rowspan="2">

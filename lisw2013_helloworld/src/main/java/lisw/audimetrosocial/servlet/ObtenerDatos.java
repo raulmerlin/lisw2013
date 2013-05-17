@@ -20,9 +20,9 @@ import lisw.audimetrosocial.business.TwitterQuery;
 @WebServlet("/ObtenerDatos")
 public class ObtenerDatos extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private Map<String, Integer> datosMapa = new HashMap<String, Integer>();
-	private Map<String, Integer> datosHora = new HashMap<String, Integer>();
-	private Map<String, Integer> datosProgramas = new HashMap<String, Integer>();
+	private Map<String, Integer> datosMapa;
+	private Map<String, Integer> datosHora;
+	private Map<String, Integer> datosProgramas;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -50,6 +50,15 @@ public class ObtenerDatos extends HttpServlet {
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("HH");
 		String currentHour = dateFormatter.format(new Date());
 		int startingHour = Integer.parseInt(currentHour) + 1;
+		dateFormatter.applyPattern("mm");
+		String currentMinute = dateFormatter.format(new Date());
+		int startingMinute = Integer.parseInt(currentMinute) - 15;
+		int startingHourForMinuteView = Integer.parseInt(currentHour);
+		
+		if (startingMinute < 0){
+			startingMinute = 60 + startingMinute;
+			startingHourForMinuteView--;
+		}
 		
 		request.setAttribute("startingHour", startingHour);
 		request.setAttribute("hashtag", hashtag1);
@@ -58,6 +67,9 @@ public class ObtenerDatos extends HttpServlet {
 		request.setAttribute("datosMapa", datosMapa);
 		request.setAttribute("datosHora", datosHora);
 		request.setAttribute("datosProgramas", datosProgramas);
+		request.setAttribute("quinzeMinutos", twitterQuery.getQuinzeMinutos());
+		request.setAttribute("startingMinute", startingMinute);
+		request.setAttribute("startingHourForMinuteView", startingHourForMinuteView);
 		
 		this.getServletContext()
 				.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
