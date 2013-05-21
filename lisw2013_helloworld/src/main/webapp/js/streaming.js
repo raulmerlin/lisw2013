@@ -49,7 +49,7 @@ var Streaming = {
 			Streaming.socket.onmessage = function(message){
 				var data = JSON.parse(message.data);
 				
-				if (data.locale != "" && data.locale != null){
+				/*if (data.locale != "" && data.locale != null){
 					var localExists = false;
 					for (var y = 0, maxrows = Datas.map.getNumberOfRows(); y < maxrows; y++){
 						if (Datas.map.getValue(y, 0) == data.locale){
@@ -102,7 +102,8 @@ var Streaming = {
 				
 				console.log(message.data);
 				$("#tweets").append("data.hour - " + data.tweetMessage + "<br />");
-				$("#count").text($("#count").text() + 1);
+				$("#count").text($("#count").text() + 1);*/
+				console.log(data);
 			};
 		},
 		

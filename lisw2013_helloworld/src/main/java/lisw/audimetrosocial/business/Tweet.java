@@ -33,5 +33,9 @@ public class Tweet {
 	public void setLocale(String locale) {
 		this.locale = locale;
 	}
+	
+	public String toString(){
+		return date + " - " + tweetMessage;
+	}
 
 }

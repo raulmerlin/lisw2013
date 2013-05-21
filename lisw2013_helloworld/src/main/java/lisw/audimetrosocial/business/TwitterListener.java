@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.CharBuffer;
 import java.text.SimpleDateFormat;
 
+import lisw.audimetrosocial.esper.Processing;
+
 import org.apache.catalina.websocket.StreamInbound;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,11 +20,13 @@ import twitter4j.User;
 public class TwitterListener implements StatusListener{
 	
 	private StreamInbound connection;
+	private Processing processer;
 	
 	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
 	
 	public TwitterListener(StreamInbound connection){
 		this.connection = connection;
+		this.processer = new Processing(connection);
 	}
 
 	@Override
@@ -55,6 +59,8 @@ public class TwitterListener implements StatusListener{
 		String locale = null;
   	  	if(user.getLocation().length() > 0) locale = Locale.getLocalCode(user.getLocation());
   	  	tweet.setLocale(locale);
+
+  	  	processer.newTweet(tweet);
   	  	sendTweet(tweet);
 	}
 
@@ -69,7 +75,7 @@ public class TwitterListener implements StatusListener{
 		try{
 			jsonRep = mapper.writeValueAsString(tweet);
 			 CharBuffer buffer = CharBuffer.wrap(jsonRep);
-			 connection.getWsOutbound().writeTextMessage(buffer);
+			// connection.getWsOutbound().writeTextMessage(buffer);
 		} catch (JsonProcessingException e1){
 			e1.printStackTrace();
 		} catch (IOException e2){
