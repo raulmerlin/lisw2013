@@ -1,7 +1,6 @@
 var Datas = {
 		map: null,
 		hour: null,
-		minutes: null,
 		programs: null
 };
 
@@ -23,3 +22,5 @@ var Charts = {
 		hour: null,
 		programs: null
 };
+
+var currentHour = null;

@@ -1,3 +1,28 @@
+// Determine if this is still the same 20 second of observation
+var getCurrentIndex = function(stringHour){
+	var hour = stringHour.substr(0, 2);
+	var minute = stringHour.substr(3, 2);
+	var second = stringHour.substr(6);
+	
+	var currentDate = new Date();
+	currentDate.setHours(hour, minute, second, 0);
+	
+	var oldDate = new Date();
+	var oldHour = currentHour.substr(0, 2);
+	var oldMinute = currentHour.substr(3, 2);
+	var oldSecond = currentHour.substr(6);
+	oldDate.setHours(oldHour, oldMinute, oldSecond, 0);
+	
+	var diff = oldDate - currentDate;
+	diff = Math.abs(Math.round(diff / 1000));
+	
+	if (diff > 20){
+		currentHour = stringHour;
+		return true;
+	}
+	return false;
+};
+
 var Streaming = {
 		hashtag: null,
 		
@@ -36,40 +61,34 @@ var Streaming = {
 					if (!localExists){
 						Datas.map.addRow([data.locale, 1]);
 					}
-					//Charts.map = new google.visualization.GeoChart(document.getElementById("chart_div"));
 					Charts.map.draw(Datas.map, Options.map);
 				}
 				
-				var hourExists = false;
-				var hour = data.date.substring(0, data.date.indexOf(":"));
-				for (var y = 0, maxrows = Datas.hour.getNumberOfRows(); y < maxrows; y++){
-					if (Datas.hour.getValue(y, 0) == hour){
-						hourExists = true;
-						Datas.hour.setValue(y, 1, Datas.hour.getValue(y, 1) + 1);
+				var newIndex = getCurrentIndex(data.date);
+				var maxRows = Datas.hour.getNumberOfRows();
+				var index;
+				if (newIndex){
+					for (var y = 0, maxrows = Datas.hour.getNumberOfRows(); y < maxrows; y++){
+						index = Datas.hour.getValue(y, 0);
+						index -= 20;
+						Datas.hour.setValue(y, 0, "" + index);
 					}
+					Datas.hour.addRow(["0", 1]);
 				}
-				
-				if (!hourExists){
-					Datas.hour.addRow([hour, 1]);
-				}
-				
-				var minuteExists = false;
-				for (var y = 0, maxrows = Datas.minutes.getNumberOfRows(); y < maxrows; y++){
-					if (Datas.minutes.getValue(y, 0) == data.date){
-						minuteExists = true;
-						Datas.minutes.setValue(y, 1, Datas.minutes.getValue(y, 1) + 1);
+				else{
+					for (var y = 0; y < maxRows; y++){
+						if (Datas.hour.getValue(y, 0) == "0"){
+							Datas.hour.setValue(y, 1, Datas.hour.getValue(y, 1) + 1);
+						}
 					}
+					
 				}
 				
-				if (!minuteExists){
-					Datas.minutes.addRow([data.date, 1]);
-				}
-				if ($("#switchScale").text() === "Ver los últimos minutos"){
-					Charts.hour.draw(Datas.hour, Options.hour);
-				} else {
-					Charts.hour.draw(Datas.minutes, Options.hour);
+				if (maxRows > 6){
+					Datas.hours.removeRow(0);
 				}
 				
+				Charts.hour.draw(Datas.hour, Options.hour);
 				
 				for (var y = 0, maxrows = Datas.programs.getNumberOfRows(); y < maxrows; y++){
 					console.log(Datas.programs.getValue(y, 0) + ": " 
@@ -83,6 +102,7 @@ var Streaming = {
 				
 				console.log(message.data);
 				$("#tweets").append("data.hour - " + data.tweetMessage + "<br />");
+				$("#count").text($("#count").text() + 1);
 			};
 		},
 		
@@ -103,17 +123,3 @@ var Streaming = {
 			}
 		}
 };
-
-$(document).ready(function(){
-	$("#switchScale").click(function(){
-		if ($(this).text() === "Ver los últimos minutos"){
-			$(this).text("Ver el último día");
-			Charts.hour.draw(Datas.minutes);
-			
-		} else{
-			$(this).text("Ver los últimos minutos");
-			Charts.hour.draw(Datas.hour);
-		}
-	});
-});
-

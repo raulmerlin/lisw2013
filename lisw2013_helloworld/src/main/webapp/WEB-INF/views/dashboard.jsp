@@ -15,7 +15,7 @@
 			google.setOnLoadCallback(drawRegionsMap);
 			function drawRegionsMap(){
 				Datas.map = google.visualization.arrayToDataTable([
-					["Provincia", "Tweets"]
+					["Provincia", "Tweets"],
 				]);
 					
 				Charts.map = new google.visualization.GeoChart(document.getElementById("chart_div"));
@@ -46,7 +46,7 @@
 			function drawVisualization() {
 				Datas.programs = google.visualization.arrayToDataTable([
 						['Graphic', 'Tweets'],
-						[${hashtag}, 0]
+						["${hashtag}", 0]
 				]);
 				
 				Charts.programs = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
