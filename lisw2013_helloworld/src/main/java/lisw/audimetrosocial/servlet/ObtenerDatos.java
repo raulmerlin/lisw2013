@@ -38,9 +38,9 @@ public class ObtenerDatos extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String hashtag1 = request.getParameter("primerHashtag");
 		if(hashtag1 == null) {
-			hashtag1 = "#granhotel";
+			hashtag1 = "google";
 		}
-		TwitterQuery twitterQuery = new TwitterQuery();
+		/*TwitterQuery twitterQuery = new TwitterQuery();
 		String responseText = twitterQuery.query(hashtag1);
 		datosMapa = twitterQuery.getDatosMapa();
 		datosHora = twitterQuery.getDatosHora();
@@ -61,7 +61,6 @@ public class ObtenerDatos extends HttpServlet {
 		}
 		
 		request.setAttribute("startingHour", startingHour);
-		request.setAttribute("hashtag", hashtag1);
 		request.setAttribute("responseText", responseText);
 		request.setAttribute("count", count);
 		request.setAttribute("datosMapa", datosMapa);
@@ -69,7 +68,12 @@ public class ObtenerDatos extends HttpServlet {
 		request.setAttribute("datosProgramas", datosProgramas);
 		request.setAttribute("quinzeMinutos", twitterQuery.getQuinzeMinutos());
 		request.setAttribute("startingMinute", startingMinute);
-		request.setAttribute("startingHourForMinuteView", startingHourForMinuteView);
+		request.setAttribute("startingHourForMinuteView", startingHourForMinuteView);*/
+		
+
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
+		request.setAttribute("hashtag", hashtag1);
+		request.setAttribute("hour", dateFormatter.format(new Date()));
 		
 		this.getServletContext()
 				.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);

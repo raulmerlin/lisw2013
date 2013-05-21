@@ -15,10 +15,7 @@
 			google.setOnLoadCallback(drawRegionsMap);
 			function drawRegionsMap(){
 				Datas.map = google.visualization.arrayToDataTable([
-					["Provincia", "Tweets"],
-					<c:forEach var="tweet" items="${datosMapa}">
-						["${tweet.key}", ${tweet.value}],
-					</c:forEach>
+					["Provincia", "Tweets"]
 				]);
 					
 				Charts.map = new google.visualization.GeoChart(document.getElementById("chart_div"));
@@ -30,56 +27,12 @@
 			google.load("visualization", "1", {packages:["corechart"]});
 			google.setOnLoadCallback(drawChart);
 
-			<c:set var="hour" value="${startingHour}" />
+			currentHour = "${hour}";
 			function drawChart() {
 				Datas.hour = google.visualization.arrayToDataTable([
 						["Hora", "Tweets"],
-						<c:forEach var="i" begin="0" end="23" step="1">
-							<c:set var="key" value="" />
-							<c:choose>
-								<c:when test="${ hour < 10 }">
-									<c:set var="key" value="0${hour}" />
-								</c:when>
-								<c:otherwise>
-									<c:set var="key" value="${hour}" />
-								</c:otherwise>
-							</c:choose>
-							
-							<c:set var="tweets" value="0" />
-							<c:forEach var="tweet" items="${datosHora}">
-								<c:if test="${tweet.key eq key}">
-									<c:set var="tweets" value="${tweet.value}" />
-								</c:if>
-							</c:forEach>
-							["${key}", ${tweets}],
-							<c:set var="hour" value="${ (hour + 1) % 24 }" />
-						</c:forEach>
-				]);
-				
-				<c:set var="hour" value="${startingHourForMinuteView}" />
-				<c:set var="minute" value="${startingMinute}" />
-				Datas.minutes = google.visualization.arrayToDataTable([
-						["Hora", "Tweets"],
-						<c:forEach var="i" begin="0" end="14" step="1">
-							<c:set var="key" value="${hour}:${minute}" />
-							<c:set var="tweets" value="0" />
-							
-							<c:forEach var="tweet" items="${quinzeMinutos}">
-								<c:if test="${tweet.key eq key}">
-									<c:set var="tweets" value="${tweet.value}" />
-								</c:if>
-							</c:forEach>
-							
-							["${key}", ${tweets}],
-
-							<c:set var="minute" value="${ minute + 1 }" />
-							<c:if test="${ minute > 60 }">
-								<c:set var="minute" value="${ minute % 24 }" />
-								<c:set var="hour" value="${ hour + 1}" />
-							</c:if>
-						</c:forEach>
-				]);
-				
+						["0", 0]
+				]);				
 				
 				Charts.hour = new google.visualization.AreaChart(document.getElementById("chart_div1"));
 				Charts.hour.draw(Datas.hour, Options.hour);
@@ -93,9 +46,7 @@
 			function drawVisualization() {
 				Datas.programs = google.visualization.arrayToDataTable([
 						['Graphic', 'Tweets'],
-						<c:forEach var="tweet" items="${datosProgramas}">
-				    		["${tweet.key}", ${tweet.value}],
-						</c:forEach>
+						[${hashtag}, 0]
 				]);
 				
 				Charts.programs = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
@@ -124,9 +75,9 @@
 					<td>
 						<h3>Evolución Horaria</h3>
 						<div id="chart_div1" style="width: 500px;"></div>
-						<div>
+						<!-- <div>
 							<button id="switchScale">Ver los últimos minutos</button>
-						</div>
+						</div>-->
 					</td>
 					
 					<td rowspan="2">
@@ -155,9 +106,9 @@
 		<br />
 		<br />
 		<br />
-		<div id="tweets">
-			${responseText}
-			Tweets totales analizados: ${count}
+		<div>
+			<p id="tweets"></p>
+			<p>Tweets totales analizados: <span id="count">0</span></p>
 			<br />
 		</div>
 		

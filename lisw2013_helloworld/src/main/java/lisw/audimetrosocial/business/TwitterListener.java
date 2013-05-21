@@ -19,7 +19,7 @@ public class TwitterListener implements StatusListener{
 	
 	private StreamInbound connection;
 	
-	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm");
+	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
 	
 	public TwitterListener(StreamInbound connection){
 		this.connection = connection;
