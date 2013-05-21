@@ -104,6 +104,19 @@ var Streaming = {
 				$("#tweets").append("data.hour - " + data.tweetMessage + "<br />");
 				$("#count").text($("#count").text() + 1);*/
 				console.log(data);
+				var maxRows = Datas.hour.getNumberOfRows();
+				var index;
+				for (var y = 0, maxrows = Datas.hour.getNumberOfRows(); y < maxrows; y++){
+					index = Datas.hour.getValue(y, 0);
+					index -= 20;
+					Datas.hour.setValue(y, 0, "" + index);
+				}
+				Datas.hour.addRow(["0", data]);
+				
+				if (maxRows > 6){
+					Datas.hour.removeRow(0);
+				}
+				Charts.hour.draw(Datas.hour, Options.hour);
 			};
 		},
 		
