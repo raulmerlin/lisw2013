@@ -1,28 +1,3 @@
-// Determine if this is still the same 20 second of observation
-var getCurrentIndex = function(stringHour){
-	var hour = stringHour.substr(0, 2);
-	var minute = stringHour.substr(3, 2);
-	var second = stringHour.substr(6);
-	
-	var currentDate = new Date();
-	currentDate.setHours(hour, minute, second, 0);
-	
-	var oldDate = new Date();
-	var oldHour = currentHour.substr(0, 2);
-	var oldMinute = currentHour.substr(3, 2);
-	var oldSecond = currentHour.substr(6);
-	oldDate.setHours(oldHour, oldMinute, oldSecond, 0);
-	
-	var diff = oldDate - currentDate;
-	diff = Math.abs(Math.round(diff / 1000));
-	
-	if (diff > 20){
-		currentHour = stringHour;
-		return true;
-	}
-	return false;
-};
-
 var Streaming = {
 		hashtag: null,
 		
@@ -49,74 +24,59 @@ var Streaming = {
 			Streaming.socket.onmessage = function(message){
 				var data = JSON.parse(message.data);
 				
-				/*if (data.locale != "" && data.locale != null){
-					var localExists = false;
-					for (var y = 0, maxrows = Datas.map.getNumberOfRows(); y < maxrows; y++){
-						if (Datas.map.getValue(y, 0) == data.locale){
-							localExists = true;
-							Datas.map.setValue(y, 1, Datas.map.getValue(y, 1) + 1);
+				var localExists;
+				var nbTweets = 0;
+				if (data[0]["type"] === "tweetCount"){
+					for (var i = 0; i < data.length; i++){
+						localExists = false;
+						if (data[i]["locale"] != null && data[i]["locale"] != ""){
+							for (var y = 0, maxrows = Datas.map.getNumberOfRows(); y < maxrows; y++){
+								if (Datas.map.getValue(y, 0) == data[i]["locale"]){
+									localExists = true;
+									Datas.map.setValue(y, 1, Datas.map.getValue(y, 1) + data[i]["nbTweets"]);
+								}
+							}
+							
+							if (!localExists){
+								Datas.map.addRow([data[i]["locale"], data[i]["nbTweets"]]);
+							}
+							Charts.map.draw(Datas.map, Options.map);
 						}
+						nbTweets += data[i]["nbTweets"];
 					}
 					
-					if (!localExists){
-						Datas.map.addRow([data.locale, 1]);
-					}
-					Charts.map.draw(Datas.map, Options.map);
-				}
-				
-				var newIndex = getCurrentIndex(data.date);
-				var maxRows = Datas.hour.getNumberOfRows();
-				var index;
-				if (newIndex){
+					
+					var maxRows = Datas.hour.getNumberOfRows();
+					var index;
 					for (var y = 0, maxrows = Datas.hour.getNumberOfRows(); y < maxrows; y++){
 						index = Datas.hour.getValue(y, 0);
-						index -= 20;
+						index -= 2;
 						Datas.hour.setValue(y, 0, "" + index);
 					}
-					Datas.hour.addRow(["0", 1]);
+					Datas.hour.addRow(["0", nbTweets]);
+					
+					if (maxRows > 60){
+						Datas.hour.removeRow(0);
+					}
+					Charts.hour.draw(Datas.hour, Options.hour);
 				}
-				else{
-					for (var y = 0; y < maxRows; y++){
-						if (Datas.hour.getValue(y, 0) == "0"){
-							Datas.hour.setValue(y, 1, Datas.hour.getValue(y, 1) + 1);
+				
+				if (data[0]["type"] === "Top5"){
+					for (var i = 0; i < data.length; i++){
+						var programExist = false;
+						for (var y = 0, maxrows = Datas.programs.getNumberOfRows(); y < maxrows; y++){
+							if (Datas.programs.getValue(y, 0) === data[i]["hashtag"]){
+								Datas.programs.setValue(y, 1, data[i]["nbTweets"]);
+								programExist = true;
+							}
+						}
+						
+						if (!programExist){
+							Datas.programs.addRow([data[i]["hashtag"], data[i]["nbTweets"]]);
 						}
 					}
-					
+					Charts.programs.draw(Datas.programs);
 				}
-				
-				if (maxRows > 6){
-					Datas.hours.removeRow(0);
-				}
-				
-				Charts.hour.draw(Datas.hour, Options.hour);
-				
-				for (var y = 0, maxrows = Datas.programs.getNumberOfRows(); y < maxrows; y++){
-					console.log(Datas.programs.getValue(y, 0) + ": " 
-							+ Datas.programs.getValue(y, 1) + "-" + Streaming.hashtag);
-					
-					if (Datas.programs.getValue(y, 0) === Streaming.hashtag){
-						Datas.programs.setValue(y, 1, Datas.programs.getValue(y, 1) + 1);
-					}
-				}
-				Charts.programs.draw(Datas.programs);
-				
-				console.log(message.data);
-				$("#tweets").append("data.hour - " + data.tweetMessage + "<br />");
-				$("#count").text($("#count").text() + 1);*/
-				console.log(data);
-				var maxRows = Datas.hour.getNumberOfRows();
-				var index;
-				for (var y = 0, maxrows = Datas.hour.getNumberOfRows(); y < maxrows; y++){
-					index = Datas.hour.getValue(y, 0);
-					index -= 20;
-					Datas.hour.setValue(y, 0, "" + index);
-				}
-				Datas.hour.addRow(["0", data]);
-				
-				if (maxRows > 6){
-					Datas.hour.removeRow(0);
-				}
-				Charts.hour.draw(Datas.hour, Options.hour);
 			};
 		},
 		

@@ -1,16 +1,12 @@
 package lisw.audimetrosocial.business;
 
-import java.io.IOException;
-import java.nio.CharBuffer;
 import java.text.SimpleDateFormat;
 
 import lisw.audimetrosocial.esper.Processing;
 
 import org.apache.catalina.websocket.StreamInbound;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import twitter4j.HashtagEntity;
 import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
@@ -19,14 +15,14 @@ import twitter4j.User;
 
 public class TwitterListener implements StatusListener{
 	
-	private StreamInbound connection;
+	private String hashtag;
 	private Processing processer;
 	
 	private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
 	
-	public TwitterListener(StreamInbound connection){
-		this.connection = connection;
-		this.processer = new Processing(connection);
+	public TwitterListener(StreamInbound connection, String hashtag){
+		this.processer = new Processing(connection, hashtag);
+		this.hashtag = hashtag;
 	}
 
 	@Override
@@ -59,27 +55,29 @@ public class TwitterListener implements StatusListener{
 		String locale = null;
   	  	if(user.getLocation().length() > 0) locale = Locale.getLocalCode(user.getLocation());
   	  	tweet.setLocale(locale);
+  	  	tweet.setUserHashtag(hashtag);
+  	  	tweet.setHashtag(getHashtag(status));
 
   	  	processer.newTweet(tweet);
-  	  	sendTweet(tweet);
 	}
 
 	@Override
 	public void onTrackLimitationNotice(int numberOfLimitedStatuses) {
 		System.out.println("Got track limitation notice:" + numberOfLimitedStatuses);
 	}
-
-	private void sendTweet(Tweet tweet){
-		ObjectMapper mapper = new ObjectMapper();
-		String jsonRep = null;
-		try{
-			jsonRep = mapper.writeValueAsString(tweet);
-			 CharBuffer buffer = CharBuffer.wrap(jsonRep);
-			// connection.getWsOutbound().writeTextMessage(buffer);
-		} catch (JsonProcessingException e1){
-			e1.printStackTrace();
-		} catch (IOException e2){
-			e2.printStackTrace();
+	
+	private String getHashtag(Status status){
+		HashtagEntity[] hashtags = status.getHashtagEntities();
+		String hashtag = null;
+		for (int i = 0; i < hashtags.length; i++){
+			hashtag = ShowList.isHashtag("#" + hashtags[i].getText());
+			if (hashtag != null){
+				return hashtag;
+			}
+			if (this.hashtag.equalsIgnoreCase("#" + hashtags[i].getText())){
+				return this.hashtag;
+			}
 		}
+		return null;
 	}
 }

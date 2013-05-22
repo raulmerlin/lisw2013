@@ -16,20 +16,23 @@ public class Processing {
 	private Configuration cepConfig;
 	private EPServiceProvider cep;
 	private EPRuntime cepRT;
-	private StreamInbound connection;
 	
-	public Processing(StreamInbound connection){
+	public Processing(StreamInbound connection, String hashtag){
 		cepConfig = new Configuration();
 		cepConfig.addEventType("Tweet", Tweet.class);
 		
 		cep = EPServiceProviderManager.getProvider("tweetProvider", cepConfig);
 		cepRT = cep.getEPRuntime();
 		
-		this.connection = connection;
-
+		String userHashtagStatement = "SELECT locale, count(*) as nbTweets FROM Tweet.win:time_batch(2 sec) WHERE userHashtag = '" + hashtag + "' GROUP BY locale";
+		String top5Statement = "SELECT hashtag, count(*) as nbTweets FROM Tweet.win:time_batch(2 min) GROUP BY hashtag ORDER BY nbTweets";
+		
 		EPAdministrator cepAdm = cep.getEPAdministrator();
-		EPStatement cepStatement = cepAdm.createEPL("SELECT count(*) as nbTweets FROM Tweet.win:time_batch(20 sec)");
-		cepStatement.addListener(new CEPListener(connection));
+		EPStatement cepStatement = cepAdm.createEPL(userHashtagStatement);
+		cepStatement.addListener(new UserHashtagListener(connection));
+		
+		EPStatement topStatement = cepAdm.createEPL(top5Statement);
+		topStatement.addListener(new Top5Listener(connection));
 	}
 	
 	public void newTweet(Tweet tweet){

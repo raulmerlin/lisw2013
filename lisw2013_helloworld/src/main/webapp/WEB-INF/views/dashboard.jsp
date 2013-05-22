@@ -14,9 +14,13 @@
 			google.load("visualization", "1", {"packages": ["geochart"]});
 			google.setOnLoadCallback(drawRegionsMap);
 			function drawRegionsMap(){
-				Datas.map = google.visualization.arrayToDataTable([
+				/*Datas.map = google.visualization.arrayToDataTable([
 					["Provincia", "Tweets"],
 				]);
+				*/
+				Datas.map = new google.visualization.DataTable();
+				Datas.map.addColumn('string', "Provincia");
+				Datas.map.addColumn('number', "Tweets");
 					
 				Charts.map = new google.visualization.GeoChart(document.getElementById("chart_div"));
 				Charts.map.draw(Datas.map, Options.map);
