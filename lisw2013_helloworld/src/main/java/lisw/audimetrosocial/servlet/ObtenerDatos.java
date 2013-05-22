@@ -11,7 +11,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Servlet implementation class ObtenerDatos
+ * Servlet that get the first user query and create the main view for the user.
+ * 
+ * @author lisw
+ *
  */
 @WebServlet("/ObtenerDatos")
 public class ObtenerDatos extends HttpServlet {

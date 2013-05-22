@@ -16,17 +16,53 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 
-
+/**
+ * Class that get the tweets from one days and send them back to the user.
+ * @deprecated Not use anymore
+ * @author lisw
+ *
+ */
 public class TwitterQuery {
 	
+	/**
+	 * Configuration builder for the Twitter API
+	 */
 	private ConfigurationBuilder cb;
+	
+	/**
+	 * Twitter object for the connection with the API
+	 */
 	private Twitter twitter;
+	
+	/**
+	 * Number of tweets by region
+	 */
 	private Map<String, Integer> datosMapa = new HashMap<String, Integer>();
+	
+	/**
+	 * Number of tweets based on time
+	 */
 	private Map<String, Integer> datosHora = new HashMap<String, Integer>();
+	
+	/**
+	 * Number of tweets based on the hashtag
+	 */
 	private Map<String, Integer> datosProgramas = new HashMap<String, Integer>();
+	
+	/**
+	 * Number of tweets based on minutes for a view of 15 minutes
+	 */
 	private Map<String, Integer> quinzeMinutos = new HashMap<String, Integer>();
+	
+	/**
+	 * Number of tweets grabed
+	 */
 	private int count;
 
+	/**
+	 * Default constructor. Build the configuration for the Twitter API.
+	 * @throws IOException
+	 */
 	public TwitterQuery() throws IOException{
 		PropertiesLoader authentication = new PropertiesLoader();
 		cb = new ConfigurationBuilder();
@@ -40,6 +76,11 @@ public class TwitterQuery {
 		count = 0; 
 	}
 	
+	/**
+	 * Get the tweets that contain the hashtag.
+	 * @param hashtag The hashtag the user is searching.
+	 * @return The concatenation of all text messages contained in the tweets.
+	 */
 	public String query(String hashtag){
 		Query query = new Query(hashtag);
         query.setCount(100); // Cogemos los máximos posibles
@@ -105,6 +146,10 @@ public class TwitterQuery {
         return null;
 	}
 	
+	/**
+	 * Add a new tweets to the corresponding hour in {@link #datosHora datosHora}.
+	 * @param hora The hour the tweet was posted.
+	 */
 	private void addHora(String hora) {
 		if(datosHora.containsKey(hora)) {
 			int habia = (Integer)datosHora.get(hora);
@@ -114,6 +159,10 @@ public class TwitterQuery {
 		}
 	}
 	
+	/**
+	 * Add a new tweets to the corresponding minute in {@link #quinzeMinutos quinzeMinutos}.
+	 * @param minuto The minute the tweet was posted.
+	 */
 	private void addMinutos(String minuto){
 		if (quinzeMinutos.containsKey(minuto)){
 			int habia = (Integer)quinzeMinutos.get(minuto);
@@ -123,6 +172,13 @@ public class TwitterQuery {
 		}
 	}
 	
+	/**
+	 * Add a new tweet to the corresponding location in {@link #datosMapa datosMapa}.
+	 * This will check if the location correspond to one of the 
+	 * {@link lisw.audimetrosocial.business.Locale region}.
+	 * 
+	 * @param location The location to add
+	 */
 	private void addLocalCode(String location) {
 		String code = Locale.getLocalCode(location);
 		if(code != "") {
@@ -135,27 +191,48 @@ public class TwitterQuery {
 		}
 	}
 
+	/**
+	 * Return {@link #datosMapa datosMapa}
+	 *
+	 * @return the datosMapa
+	 */
 	public Map<String, Integer> getDatosMapa() {
 		return datosMapa;
 	}
 
+	/**
+	 * Return {@link #datosHora datosHora}
+	 *
+	 * @return the datosHora
+	 */
 	public Map<String, Integer> getDatosHora() {
 		return datosHora;
 	}
 
+	/**
+	 * Return {@link #datosProgramas datosProgramas}
+	 *
+	 * @return the datosProgramas
+	 */
 	public Map<String, Integer> getDatosProgramas() {
 		return datosProgramas;
 	}
-	
-	public int getCount(){
-		return count;
-	}
 
+	/**
+	 * Return {@link #quinzeMinutos quinzeMinutos}
+	 *
+	 * @return the quinzeMinutos
+	 */
 	public Map<String, Integer> getQuinzeMinutos() {
 		return quinzeMinutos;
 	}
 
-	public void setQuinzeMinutos(Map<String, Integer> quinzeMinutos) {
-		this.quinzeMinutos = quinzeMinutos;
+	/**
+	 * Return {@link #count count}
+	 *
+	 * @return the count
+	 */
+	public int getCount() {
+		return count;
 	}
 }

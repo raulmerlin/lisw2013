@@ -1,7 +1,19 @@
 package lisw.audimetrosocial.business;
 
+/**
+ * Class that check the places mentionned by the user and match them to 
+ * the region in Spain
+ * @author lisw
+ *
+ */
 public class Locale {
 	
+	/**
+	 * Return the ISO 3166-1 representation of a location base on regular expressions; 	
+	 * 
+	 * @param location The location enter by the user 
+	 * @return
+	 */
 	public static String getLocalCode(String location) {
 		if(location.matches(".*Álava.*")) return "ES-PV";
 		else if(location.matches(".*Albacete.*")) return "ES-CM";
