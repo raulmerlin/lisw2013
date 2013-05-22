@@ -1,7 +1,62 @@
-.right{
-	float: right;
+body{
+	background-color: #E6E6E6;
 }
 
-table{
-	width: 100%;
+#chart_div{
+	width: 40%;
+	height: 200px; 
+	float: left;
+	position: absolute;
+	margin-left: 5%;
+	border: 1px solid #A4A4A4;
+}
+
+#column_chart_div{
+	width: 40%;
+	height: 200px;
+	float: right;
+	margin-right: 5%;
+	position: relative;
+	border: 1px solid #A4A4A4;
+}
+
+#region_chart_div{
+	width: 50%; 
+	height: 400px; 
+	clear: both; 
+	margin: auto; 
+	border: 1px solid #A4A4A4;
+}
+
+#mapa{
+	width: 100%; 
+	clear: both; 
+	margin-left: auto; 
+	margin-right: auto;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+h4{
+	display: block;
+	width: 100%; 
+	clear: left; 
+	margin: auto;
+	font-family: 'Special Elite'; 
+	text-align: center;
+}
+
+h1{
+	font-family: 'Special Elite'; 
+	text-align: center;
+}
+
+.right{
+	float: right;
+	margin-bottom: 10px;
+}
+
+.clear{
+	clear: both;
+	margin-top: 10px;
 }

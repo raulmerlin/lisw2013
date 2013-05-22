@@ -6,6 +6,7 @@
 		<title>Visualizando datos sobre: ${hashtag}</title>
 		<meta http-equiv="content-type" content="text/html;charset=ISO-8859-1" />
 		<link type="text/css" rel="stylesheet" href="css/stylesheet.css">
+		<link href='http://fonts.googleapis.com/css?family=Special+Elite' rel='stylesheet' type='text/css'>
 		
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
@@ -14,15 +15,11 @@
 			google.load("visualization", "1", {"packages": ["geochart"]});
 			google.setOnLoadCallback(drawRegionsMap);
 			function drawRegionsMap(){
-				/*Datas.map = google.visualization.arrayToDataTable([
-					["Provincia", "Tweets"],
-				]);
-				*/
 				Datas.map = new google.visualization.DataTable();
 				Datas.map.addColumn('string', "Provincia");
 				Datas.map.addColumn('number', "Tweets");
 					
-				Charts.map = new google.visualization.GeoChart(document.getElementById("chart_div"));
+				Charts.map = new google.visualization.GeoChart(document.getElementById("region_chart_div"));
 				Charts.map.draw(Datas.map, Options.map);
 			}
 		</script>
@@ -33,12 +30,11 @@
 
 			currentHour = "${hour}";
 			function drawChart() {
-				Datas.hour = google.visualization.arrayToDataTable([
-						["Hora", "Tweets"],
-						["0", 0]
-				]);				
+				Datas.hour = new google.visualization.DataTable();
+				Datas.hour.addColumn('string', "Hora");
+				Datas.hour.addColumn('number', "Tweets");		
 				
-				Charts.hour = new google.visualization.AreaChart(document.getElementById("chart_div1"));
+				Charts.hour = new google.visualization.AreaChart(document.getElementById("chart_div"));
 				Charts.hour.draw(Datas.hour, Options.hour);
 			}
 		</script>
@@ -48,12 +44,11 @@
 			google.setOnLoadCallback(drawVisualization);
 			
 			function drawVisualization() {
-				Datas.programs = google.visualization.arrayToDataTable([
-						['Graphic', 'Tweets'],
-						["${hashtag}", 0]
-				]);
+				Datas.programs = new google.visualization.DataTable();
+				Datas.programs.addColumn('string', "Graphic");
+				Datas.programs.addColumn('number', "Tweets");
 				
-				Charts.programs = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
+				Charts.programs = new google.visualization.ColumnChart(document.getElementById('column_chart_div'));
 				Charts.programs.draw(Datas.programs);
 			}
 		</script>
@@ -73,48 +68,15 @@
 			</form>
 		</div>
 		
-		<table border="0" cellpadding="1" cellspacing="1">
-			<tbody>
-				<tr>
-					<td>
-						<h3>Evolución Horaria</h3>
-						<div id="chart_div1" style="width: 500px;"></div>
-						<!-- <div>
-							<button id="switchScale">Ver los últimos minutos</button>
-						</div>-->
-					</td>
-					
-					<td rowspan="2">
-						<h3>Mapa de Actividad</h3>
-						<div id="chart_div" style="width: 700px;"></div>
-					</td>
-				</tr>
-				
-				<tr>
-					<td>
-						<h3>Top 5 Programas</h3>
-						<div id="chart_div2" style="width: 500px;"></div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+		<div class="clear"></div>
 		
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<br />
-		<div>
-			<p id="tweets"></p>
-			<p>Tweets totales analizados: <span id="count">0</span></p>
-			<br />
+		<div id="chart_div"></div>
+		<div id="column_chart_div"></div>
+		<div id="mapa">
+			<h4>Distrubuci&oacute;n geogr&aacute;fica</h4>
 		</div>
+		
+		<div id="region_chart_div"></div>
 		
 	</body>	
 </html>
